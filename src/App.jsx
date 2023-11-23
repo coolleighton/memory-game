@@ -1,17 +1,21 @@
-import { useState } from 'react'
-import API from "./Components/API.jsx"
-import './App.css'
+import { useEffect, useState } from "react";
+import Images from "./Components/Images.jsx";
+import "./App.css";
 
 function App() {
 
-  API()
+
+  
+  
+  
+
   return (
     <>
       <div>
-        <p>hello</p>
+        <Images></Images>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
