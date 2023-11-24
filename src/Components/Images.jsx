@@ -3,10 +3,20 @@ import { useEffect, useState } from "react";
 function Images() {
   const [imagesData, setImagesData] = useState([]);
 
-  useEffect(() => {
-    const imageAmount = 10;
+  const removeTextAfterGif = (inputString) => {
+    const gifIndex = inputString.toLowerCase().indexOf('gif');
 
-    const apiUrl = `https://api.giphy.com/v1/gifs/search?api_key=MgJzg2AwpRJBo5C7rMNvNc2cc28Dytax&q=memes&limit=${imageAmount}&offset=0&rating=g&lang=en&bundle=messaging_non_clips`;
+    if (gifIndex !== -1) {
+      return inputString.substring(0, gifIndex -1);
+    }
+
+    return inputString;
+  };
+
+  useEffect(() => {
+    const imageAmount = 5;
+    const searchFor = "car"
+    const apiUrl = `https://api.giphy.com/v1/gifs/search?api_key=MgJzg2AwpRJBo5C7rMNvNc2cc28Dytax&q=${searchFor}&limit=${imageAmount}&offset=0&rating=g&lang=en&bundle=messaging_non_clips`;
 
     const fetchGif = async () => {
       try {
@@ -23,24 +33,21 @@ function Images() {
   }, []);
 
   return (
-    <div>
+    <div className="flex justify-center">
       {imagesData.map((item, i) => {
+
+        const title = removeTextAfterGif(item.title)
+
         return (
           <div
-            style={{
-              width: "200px",
-              height: "200px",
-              marginBottom: "100px"
-            }}
             key={i}
+            className="w-48 p-5 mx-5 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl hover:scale-110 hover:cursor-pointer"
           >
             <img
-              style={{
-                width: "200px",
-              }}
+              className="h-48 w-48 rounded-2xl "
               src={item.images.original.url}
             ></img>
-            <p className="text-blue-500">{item.title}</p>
+            <p className="text-sm shadow-lg text-white font-semibold bg-blue-900 text-center align-middle p-2 mt-5 rounded-xl">{title}</p>
           </div>
         );
       })}
