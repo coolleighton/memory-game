@@ -41,7 +41,7 @@ function Images({gameState, searchState, handleClick }) {
           <div
             id={i}
             key={i}
-            className="w-48 p-5 mx-5 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl hover:scale-110 hover:cursor-pointer"
+            className="w-48 p-5 mx-5 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl hover:scale-110 hover:cursor-pointer duration-200"
             onClick={(e) => handleClick(e.target.id)}
           >
             <img

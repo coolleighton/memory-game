@@ -1,15 +1,17 @@
-import { forceUpdate, useState } from "react";
+import { useState } from "react";
 import Images from "./Components/Images.jsx";
 import Score from "./Components/Score.jsx";
 import SearchBar from "./Components/SearchBar.jsx";
+import StartScreen from "./Components/StartScreen.jsx";
 import "./App.css";
 
 function App() {
   // handle search input change
 
   const [searchState, setSearchState] = useState({
-    searchTerm: "cat",
+    searchTerm: "car",
     searchAmount: 5,
+    started: false,
   });
 
   const searchFunction = (value) => {
@@ -17,6 +19,20 @@ function App() {
       searchTerm: value,
       searchAmount: 5,
     });
+  };
+
+  // handle game starting with "dog"
+
+  const startWithDog = () => {
+    console.log("start");
+    const newSearchState = {
+      searchTerm: "dog",
+      searchAmount: 5,
+      started: true,
+    }
+
+    setSearchState(newSearchState)
+    console.log(newSearchState)
   };
 
   // handle gameState
@@ -67,7 +83,11 @@ function App() {
         </h1>
         <SearchBar searchFunction={searchFunction}></SearchBar>
         <Score></Score>
-        <div id="imagesDiv">
+        <div
+          id="imagesDiv"
+          className="flex flex-col justify-center items-center"
+        >
+          <StartScreen startWithDog={startWithDog}></StartScreen>
           <Images
             gameState={gameState}
             searchState={searchState}

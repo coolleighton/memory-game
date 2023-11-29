@@ -15,7 +15,7 @@ function SearchBar({searchFunction}) {
         id="searchData"
       ></input>
       <img
-        className="w-10 h-10 bg-blue-600 p-2 ml-7 rounded-xl hover:cursor-pointer hover:scale-110 shadow-xl"
+        className="w-10 h-10 bg-blue-600 p-2 ml-7 rounded-xl hover:cursor-pointer hover:scale-110 shadow-xl duration-200"
         src={searchImg}
         onClick={() => searchFunction(inputValue())}
       ></img>
