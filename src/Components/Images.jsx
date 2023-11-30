@@ -30,7 +30,7 @@ function Images({gameState, searchState, handleClick }) {
     };
 
     fetchGif();
-  }, [searchState.searchTerm, gameState]);
+  }, [gameState]);
 
   return (
     <div className="flex justify-center">

@@ -6,59 +6,76 @@ import StartScreen from "./Components/StartScreen.jsx";
 import "./App.css";
 
 function App() {
-  // handle search input change
+  // useState for gameState
 
-  const [searchState, setSearchState] = useState({
-    searchTerm: "car",
-    searchAmount: 5,
-    started: false,
-  });
-
-  const searchFunction = (value) => {
-    setAppState({
-      searchTerm: value,
+  const [gameState, setGameState] = useState({
+    gamePosition: {
+      searchTerm: "car",
       searchAmount: 5,
-    });
-  };
+      started: false,
+    },
+
+    gameStats: [
+      { clicked: false, id: 0 },
+      { clicked: false, id: 1 },
+      { clicked: false, id: 2 },
+      { clicked: false, id: 3 },
+      { clicked: false, id: 4 },
+    ],
+
+    gameScores: {
+      currentScore: 0,
+      highScore: 0,
+    },
+  });
 
   // handle game starting with "dog"
 
   const startWithDog = () => {
-    console.log("start");
     const newSearchState = {
       searchTerm: "dog",
       searchAmount: 5,
       started: true,
-    }
+    };
 
-    setSearchState(newSearchState)
-    console.log(newSearchState)
+    setGameState({
+      gamePosition: newSearchState,
+      gameStats: gameState.gameStats,
+      gameScores: gameState.gameScores,
+    });
   };
 
-  // handle gameState
+  // handle game starting with a new search term
 
-  const [gameState, setGameState] = useState([
-    { clicked: false, id: 0 },
-    { clicked: false, id: 1 },
-    { clicked: false, id: 2 },
-    { clicked: false, id: 3 },
-    { clicked: false, id: 4 },
-  ]);
+  const searchFunction = (value) => {
+    const newGamePosition = {
+      searchTerm: value,
+      searchAmount: 5,
+      started: true,
+    };
+    setGameState({
+      gamePosition: newGamePosition,
+      gameStats: gameState.gameStats,
+      gameScores: gameState.gameScores,
+    });
+  };
 
   // handle image clicks
 
   const handleClick = (index) => {
     let i = +index;
 
-    const newGameState = gameState.map((cardClicked) => {
+    const newGameState = gameState.gameStats.map((cardClicked) => {
       if (cardClicked.id === i) {
         if (!cardClicked.clicked) {
+
+          console.log("+ 1 point and make this card clicked ")
           return {
             ...cardClicked,
             clicked: true,
           };
         } else {
-          console.log("game finishes");
+          console.log("run new game function with a start new game button");
           return {
             ...cardClicked,
             clicked: true,
@@ -68,13 +85,18 @@ function App() {
         return cardClicked;
       }
     });
-    setGameState(newGameState);
-    console.log(newGameState);
+    setGameState({
+      gamePosition: gameState.gamePosition,
+      gameStats: newGameState,
+      gameScores: gameState.gameScores,
+    });
   };
+
+  // handle score logic
 
   return (
     <>
-      <div className="md:container md:mx-auto mt-10 flex flex-col">
+      <div className="md:container md:mx-auto flex flex-col">
         <h1 className="mb-5 text-center text-5xl text-blue-400 font-semibold">
           <span className="text-7xl text-purple-500">YOUR</span>
           FAVOURITE <br></br>
@@ -87,12 +109,15 @@ function App() {
           id="imagesDiv"
           className="flex flex-col justify-center items-center"
         >
-          <StartScreen startWithDog={startWithDog}></StartScreen>
-          <Images
-            gameState={gameState}
-            searchState={searchState}
-            handleClick={handleClick}
-          ></Images>
+          {gameState.gamePosition.started ? (
+            <Images
+              gameState={gameState.gameStats}
+              searchState={gameState.gamePosition}
+              handleClick={handleClick}
+            />
+          ) : (
+            <StartScreen startWithDog={startWithDog} />
+          )}
         </div>
       </div>
     </>
