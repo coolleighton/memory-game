@@ -1,18 +1,18 @@
 import { useState } from "react";
-import Images from "./Components/Images.jsx";
 import Score from "./Components/Score.jsx";
 import SearchBar from "./Components/SearchBar.jsx";
-import StartScreen from "./Components/StartScreen.jsx";
+import GameScreen from "./Components/GameScreen.jsx";
 import "./App.css";
 
 function App() {
-  // useState for gameState
+  // gameState declaration
 
   const [gameState, setGameState] = useState({
     gamePosition: {
       searchTerm: "car",
       searchAmount: 5,
       started: false,
+      gameFailed: false,
     },
 
     gameStats: [
@@ -32,15 +32,24 @@ function App() {
   // handle game starting with "dog"
 
   const startWithDog = () => {
-    const newSearchState = {
+    const newGamePosition = {
       searchTerm: "dog",
       searchAmount: 5,
       started: true,
+      gameFailed: false,
     };
 
+    const newGameStats = [
+      { clicked: false, id: 0 },
+      { clicked: false, id: 1 },
+      { clicked: false, id: 2 },
+      { clicked: false, id: 3 },
+      { clicked: false, id: 4 },
+    ];
+
     setGameState({
-      gamePosition: newSearchState,
-      gameStats: gameState.gameStats,
+      gamePosition: newGamePosition,
+      gameStats: newGameStats,
       gameScores: gameState.gameScores,
     });
   };
@@ -52,10 +61,20 @@ function App() {
       searchTerm: value,
       searchAmount: 5,
       started: true,
+      gameFailed: false,
     };
+    
+    const newGameStats = [
+      { clicked: false, id: 0 },
+      { clicked: false, id: 1 },
+      { clicked: false, id: 2 },
+      { clicked: false, id: 3 },
+      { clicked: false, id: 4 },
+    ];
+
     setGameState({
       gamePosition: newGamePosition,
-      gameStats: gameState.gameStats,
+      gameStats: newGameStats,
       gameScores: gameState.gameScores,
     });
   };
@@ -64,30 +83,39 @@ function App() {
 
   const handleClick = (index) => {
     let i = +index;
+    let startNewGame = false;
 
-    const newGameState = gameState.gameStats.map((cardClicked) => {
+    const newGameStats = gameState.gameStats.map((cardClicked) => {
       if (cardClicked.id === i) {
         if (!cardClicked.clicked) {
-
-          console.log("+ 1 point and make this card clicked ")
+          console.log("+ 1 point and make this card clicked ");
           return {
             ...cardClicked,
             clicked: true,
           };
         } else {
           console.log("run new game function with a start new game button");
-          return {
-            ...cardClicked,
-            clicked: true,
-          };
+          startNewGame = true;
         }
       } else {
         return cardClicked;
       }
     });
+
+    const newGamePosition = () => {
+      if (startNewGame === false) {
+        return gameState.gamePosition;
+      } else {
+        return {
+          ...gameState.gamePosition,
+          gameFailed: true,
+        };
+      }
+    };
+
     setGameState({
-      gamePosition: gameState.gamePosition,
-      gameStats: newGameState,
+      gamePosition: newGamePosition(),
+      gameStats: newGameStats,
       gameScores: gameState.gameScores,
     });
   };
@@ -105,20 +133,11 @@ function App() {
         </h1>
         <SearchBar searchFunction={searchFunction}></SearchBar>
         <Score></Score>
-        <div
-          id="imagesDiv"
-          className="flex flex-col justify-center items-center"
-        >
-          {gameState.gamePosition.started ? (
-            <Images
-              gameState={gameState.gameStats}
-              searchState={gameState.gamePosition}
-              handleClick={handleClick}
-            />
-          ) : (
-            <StartScreen startWithDog={startWithDog} />
-          )}
-        </div>
+        <GameScreen
+          gameState={gameState}
+          handleClick={handleClick}
+          startWithDog={startWithDog}
+        ></GameScreen>
       </div>
     </>
   );

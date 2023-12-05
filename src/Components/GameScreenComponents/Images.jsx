@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Images({gameState, searchState, handleClick }) {
+function Images({gameState, handleClick }) {
   const [imagesData, setImagesData] = useState([]);
 
   const removeTextAfterGif = (inputString) => {
@@ -15,7 +15,7 @@ function Images({gameState, searchState, handleClick }) {
 
   useEffect(() => {
     const imageAmount = 5;
-    const searchFor = searchState.searchTerm;
+    const searchFor = gameState.gamePosition.searchTerm;
     const apiUrl = `https://api.giphy.com/v1/gifs/search?api_key=MgJzg2AwpRJBo5C7rMNvNc2cc28Dytax&q=${searchFor}&limit=${imageAmount}&offset=0&rating=g&lang=en&bundle=messaging_non_clips`;
 
     const fetchGif = async () => {
