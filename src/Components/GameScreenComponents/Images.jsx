@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 function Images({gameState, handleClick }) {
   const [imagesData, setImagesData] = useState([]);
 
+  // clean up gif titles 
+
   const removeTextAfterGif = (inputString) => {
     const gifIndex = inputString.toLowerCase().indexOf("gif");
 
@@ -13,8 +15,10 @@ function Images({gameState, handleClick }) {
     return inputString;
   };
 
+  // fetch images 
+
   useEffect(() => {
-    const imageAmount = 5;
+    const imageAmount = gameState.gamePosition.searchAmount;
     const searchFor = gameState.gamePosition.searchTerm;
     const apiUrl = `https://api.giphy.com/v1/gifs/search?api_key=MgJzg2AwpRJBo5C7rMNvNc2cc28Dytax&q=${searchFor}&limit=${imageAmount}&offset=0&rating=g&lang=en&bundle=messaging_non_clips`;
 
@@ -30,7 +34,9 @@ function Images({gameState, handleClick }) {
     };
 
     fetchGif();
-  }, [gameState]);
+  }, [gameState.gamePosition.searchTerm]);
+
+  // render images on screen
 
   return (
     <div className="flex justify-center">

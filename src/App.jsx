@@ -52,6 +52,9 @@ function App() {
       gameStats: newGameStats,
       gameScores: gameState.gameScores,
     });
+
+    document.querySelector("#currentScore").textContent = 0
+    document.querySelector("#highScore").textContent = gameState.gameScores.highScore
   };
 
   // handle game starting with a new search term
@@ -63,7 +66,7 @@ function App() {
       started: true,
       gameFailed: false,
     };
-    
+
     const newGameStats = [
       { clicked: false, id: 0 },
       { clicked: false, id: 1 },
@@ -77,6 +80,9 @@ function App() {
       gameStats: newGameStats,
       gameScores: gameState.gameScores,
     });
+
+    document.querySelector("#currentScore").textContent = 0
+    document.querySelector("#highScore").textContent = gameState.gameScores.highScore
   };
 
   // handle image clicks
@@ -84,6 +90,8 @@ function App() {
   const handleClick = (index) => {
     let i = +index;
     let startNewGame = false;
+
+    // creates new game stats
 
     const newGameStats = gameState.gameStats.map((cardClicked) => {
       if (cardClicked.id === i) {
@@ -96,11 +104,17 @@ function App() {
         } else {
           console.log("run new game function with a start new game button");
           startNewGame = true;
+          return {
+            ...cardClicked,
+            clicked: true,
+          };
         }
       } else {
         return cardClicked;
       }
     });
+
+    // creates new games position
 
     const newGamePosition = () => {
       if (startNewGame === false) {
@@ -113,14 +127,41 @@ function App() {
       }
     };
 
+    // adds up how many objects where clicked = ture
+
+    function sumClicked(array) {
+      return array.reduce((sum, obj) => sum + (obj.clicked ? 1 : 0), 0);
+    }
+
+    // creates new high score
+
+    function checkForHighScore(scores) {
+
+      if (scores.highScore === 0) {
+        return 1;
+      } else if (sumClicked(newGameStats) > scores.highScore) {
+        return sumClicked(newGameStats);
+      } else {
+        return scores.highScore;
+      }
+    }
+
+    // creates new games scores
+
+    const newGameScores = {
+      currentScore: sumClicked(newGameStats),
+      highScore: checkForHighScore(gameState.gameScores),
+    };
+
+    document.querySelector("#currentScore").textContent = newGameScores.currentScore
+    document.querySelector("#highScore").textContent = newGameScores.highScore
+
     setGameState({
       gamePosition: newGamePosition(),
       gameStats: newGameStats,
-      gameScores: gameState.gameScores,
+      gameScores: newGameScores,
     });
   };
-
-  // handle score logic
 
   return (
     <>
