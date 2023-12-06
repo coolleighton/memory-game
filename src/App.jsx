@@ -47,10 +47,15 @@ function App() {
       { clicked: false, id: 4 },
     ];
 
+    const newGameScores = {
+      currentScore: 0,
+      ...gameState.gameScores
+    }
+
     setGameState({
       gamePosition: newGamePosition,
       gameStats: newGameStats,
-      gameScores: gameState.gameScores,
+      gameScores: newGameScores,
     });
 
     document.querySelector("#currentScore").textContent = 0
@@ -75,15 +80,24 @@ function App() {
       { clicked: false, id: 4 },
     ];
 
+    const newGameScores = {
+      currentScore: 0,
+      ...gameState.gameScores
+    }
+
     setGameState({
       gamePosition: newGamePosition,
       gameStats: newGameStats,
-      gameScores: gameState.gameScores,
+      gameScores: newGameScores,
     });
 
     document.querySelector("#currentScore").textContent = 0
     document.querySelector("#highScore").textContent = gameState.gameScores.highScore
   };
+
+  // run search function on press enter 
+
+  
 
   // handle image clicks
 
@@ -152,6 +166,8 @@ function App() {
       currentScore: sumClicked(newGameStats),
       highScore: checkForHighScore(gameState.gameScores),
     };
+
+    console.log(newGameScores)
 
     document.querySelector("#currentScore").textContent = newGameScores.currentScore
     document.querySelector("#highScore").textContent = newGameScores.highScore

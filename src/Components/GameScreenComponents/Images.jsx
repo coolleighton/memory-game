@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-function Images({gameState, handleClick }) {
+function Images({ gameState, handleClick }) {
   const [imagesData, setImagesData] = useState([]);
 
-  // clean up gif titles 
+  // clean up gif titles
 
   const removeTextAfterGif = (inputString) => {
     const gifIndex = inputString.toLowerCase().indexOf("gif");
@@ -15,7 +15,7 @@ function Images({gameState, handleClick }) {
     return inputString;
   };
 
-  // fetch images 
+  // fetch images
 
   useEffect(() => {
     const imageAmount = gameState.gamePosition.searchAmount;
@@ -35,6 +35,22 @@ function Images({gameState, handleClick }) {
 
     fetchGif();
   }, [gameState.gamePosition.searchTerm]);
+
+  // randomise images data order on score change
+
+  useEffect(() => {
+    function randomizeArray() {
+      const randomizedArray = [...imagesData];
+
+      for (let i = randomizedArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * i);
+        [randomizedArray[i], randomizedArray[j]] = [randomizedArray[j], randomizedArray[i]];
+      }
+
+      setImagesData(randomizedArray);
+    }
+    randomizeArray();
+  }, [gameState.gameScores.currentScore]);
 
   // render images on screen
 
