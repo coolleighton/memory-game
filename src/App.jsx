@@ -5,14 +5,25 @@ import GameScreen from "./Components/GameScreen.jsx";
 import "./App.css";
 
 function App() {
-  // gameState declaration
+  // Get game state from local storage and check for high score
 
-  const [gameState, setGameState] = useState({
+  let localStorageData = JSON.parse(window.localStorage.getItem("gameState"));
+
+  const highScoreValue = (localStorageData) => {
+    if (!localStorageData) {
+      return 0;
+    } else {
+      return localStorageData.gameScores.highScore;
+    }
+  };
+
+  const onLoadGameState = {
     gamePosition: {
-      searchTerm: "car",
+      searchTerm: "dogs",
       searchAmount: 5,
       started: false,
       gameFailed: false,
+      imagesAbove5: true,
     },
 
     gameStats: [
@@ -25,18 +36,21 @@ function App() {
 
     gameScores: {
       currentScore: 0,
-      highScore: 0,
+      highScore: highScoreValue(localStorageData),
     },
-  });
+  };
+
+  const [gameState, setGameState] = useState(onLoadGameState);
 
   // handle game starting with "dog"
 
   const startWithDog = () => {
     const newGamePosition = {
-      searchTerm: "dog",
+      searchTerm: "dogs",
       searchAmount: 5,
       started: true,
       gameFailed: false,
+      imagesAbove5: true,
     };
 
     const newGameStats = [
@@ -49,17 +63,22 @@ function App() {
 
     const newGameScores = {
       currentScore: 0,
-      ...gameState.gameScores
-    }
+      ...gameState.gameScores,
+    };
 
-    setGameState({
+    const newgameState = {
       gamePosition: newGamePosition,
       gameStats: newGameStats,
       gameScores: newGameScores,
-    });
+    };
 
-    document.querySelector("#currentScore").textContent = 0
-    document.querySelector("#highScore").textContent = gameState.gameScores.highScore
+    setGameState(newgameState);
+    localStorage.setItem("gameState", JSON.stringify(newgameState));
+
+    document.querySelector("#currentScore").textContent = 0;
+    document.querySelector("#highScore").textContent =
+      gameState.gameScores.highScore;
+    document.querySelector("#searchData").value = "dogs";
   };
 
   // handle game starting with a new search term
@@ -70,6 +89,7 @@ function App() {
       searchAmount: 5,
       started: true,
       gameFailed: false,
+      imagesAbove5: true,
     };
 
     const newGameStats = [
@@ -82,22 +102,22 @@ function App() {
 
     const newGameScores = {
       currentScore: 0,
-      ...gameState.gameScores
-    }
+      ...gameState.gameScores,
+    };
 
-    setGameState({
+    const newgameState = {
       gamePosition: newGamePosition,
       gameStats: newGameStats,
       gameScores: newGameScores,
-    });
+    };
 
-    document.querySelector("#currentScore").textContent = 0
-    document.querySelector("#highScore").textContent = gameState.gameScores.highScore
+    setGameState(newgameState);
+    localStorage.setItem("gameState", JSON.stringify(newgameState));
+
+    document.querySelector("#currentScore").textContent = 0;
+    document.querySelector("#highScore").textContent =
+      gameState.gameScores.highScore;
   };
-
-  // run search function on press enter 
-
-  
 
   // handle image clicks
 
@@ -150,7 +170,6 @@ function App() {
     // creates new high score
 
     function checkForHighScore(scores) {
-
       if (scores.highScore === 0) {
         return 1;
       } else if (sumClicked(newGameStats) > scores.highScore) {
@@ -167,17 +186,41 @@ function App() {
       highScore: checkForHighScore(gameState.gameScores),
     };
 
-    console.log(newGameScores)
+    document.querySelector("#currentScore").textContent =
+      newGameScores.currentScore;
+    document.querySelector("#highScore").textContent = newGameScores.highScore;
 
-    document.querySelector("#currentScore").textContent = newGameScores.currentScore
-    document.querySelector("#highScore").textContent = newGameScores.highScore
-
-    setGameState({
+    const newgameState = {
       gamePosition: newGamePosition(),
       gameStats: newGameStats,
       gameScores: newGameScores,
-    });
+    };
+
+    setGameState(newgameState);
+    localStorage.setItem("gameState", JSON.stringify(newgameState));
   };
+
+  // handle if images array is below 5 
+
+  const handleImageCount = (imagesArray) => {
+
+    console.log(imagesArray.length)
+    if (imagesArray.length < 5) {
+      const newGamePosition = {
+        ...gameState.gamePosition,
+        imagesAbove5: false,
+      }
+
+      const newgameState = {
+        gamePosition: newGamePosition,
+        gameStats: gameState.gameStats,
+        gameScores: gameState.gameScores,
+      };
+  
+      setGameState(newgameState);
+      localStorage.setItem("gameState", JSON.stringify(newgameState));
+    }
+  }
 
   return (
     <>
@@ -189,12 +232,18 @@ function App() {
           <span className="text-7xl text-purple-500">GAME</span>
         </h1>
         <SearchBar searchFunction={searchFunction}></SearchBar>
-        <Score></Score>
-        <GameScreen
-          gameState={gameState}
-          handleClick={handleClick}
-          startWithDog={startWithDog}
-        ></GameScreen>
+        <Score gameState={gameState}></Score>
+        <div
+          id="imagesDiv"
+          className="flex flex-col justify-center items-center"
+        >
+          <GameScreen
+            gameState={gameState}
+            handleClick={handleClick}
+            startWithDog={startWithDog}
+            handleImageCount={handleImageCount}
+          ></GameScreen>
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Images({ gameState, handleClick }) {
+function Images({ gameState, handleClick, handleImageCount }) {
   const [imagesData, setImagesData] = useState([]);
 
   // clean up gif titles
@@ -26,6 +26,8 @@ function Images({ gameState, handleClick }) {
       try {
         const response = await fetch(apiUrl);
         const data = await response.json();
+        // check if there is atleast 5 images
+        handleImageCount(data.data)
 
         setImagesData(data.data);
       } catch (error) {
@@ -33,7 +35,8 @@ function Images({ gameState, handleClick }) {
       }
     };
 
-    fetchGif();
+    fetchGif()
+  
   }, [gameState.gamePosition.searchTerm]);
 
   // randomise images data order on score change
@@ -52,12 +55,22 @@ function Images({ gameState, handleClick }) {
     randomizeArray();
   }, [gameState.gameScores.currentScore]);
 
+  // check if there is enough images
+
+  
+
   // render images on screen
 
   return (
     <div className="flex justify-center">
       {imagesData.map((item, i) => {
-        const title = removeTextAfterGif(item.title);
+        let title = removeTextAfterGif(item.title);
+        
+
+        // add search term as title if no title exists
+        if(!title) {
+          title = gameState.gamePosition.searchTerm
+        }
 
         return (
           <div

@@ -1,34 +1,71 @@
-import FailedScreen from "./GameScreenComponents/FailedScreen";
-import StartScreen from "./GameScreenComponents/StartScreen";
 import Images from "./GameScreenComponents/Images";
+import MessageScreen from "./GameScreenComponents/MessageScreen";
 
-function GameScreen({ gameState, handleClick, startWithDog }) {
+function GameScreen({
+  gameState,
+  handleClick,
+  startWithDog,
+  handleImageCount,
+}) {
+  const startScreenMessage = {
+    messageText:
+      "To start 'Your Favourite Memory Game' enter your favourite thing into the search bar above and press enter. We recommend entering one word search terms but almost anything works. If you can't decide, use the button below to play the game with dogs.",
+    buttonText: "Play the memory game with dogs",
+    messageFunction: startWithDog,
+  };
+
+  const failedScreenMessage = {
+    messageText:
+      "You failed. Either press the button below to start again with dogs, or enter something above.",
+    buttonText: "Play the memory game with dogs",
+    messageFunction: startWithDog,
+  };
+
+  const notEnoughGifsMessage = {
+    messageText:
+      "We could not find enough gifs to match your search term. Either press the button below to start with dogs, or enter something more popular.",
+    buttonText: "Play the memory game with dogs",
+    messageFunction: startWithDog,
+  };
+
   if (
     (gameState.gamePosition.started === false) &
     (gameState.gamePosition.gameFailed === false)
   ) {
     return (
-      <div id="imagesDiv" className="flex flex-col justify-center items-center">
-        <StartScreen startWithDog={startWithDog}></StartScreen>
-      </div>
+      <MessageScreen
+        startWithDog={startWithDog}
+        message={startScreenMessage}
+      ></MessageScreen>
     );
-  } else if (
-    (gameState.gamePosition.started === true) &
-    (gameState.gamePosition.gameFailed === false)
-  ) {
+  }
+  if (gameState.gamePosition.imagesAbove5 === false) {
     return (
-      <div id="imagesDiv" className="flex flex-col justify-center items-center">
-        <Images gameState={gameState} handleClick={handleClick}></Images>
-      </div>
+      <MessageScreen
+        startWithDog={startWithDog}
+        message={notEnoughGifsMessage}
+      ></MessageScreen>
     );
   } else if (
     (gameState.gamePosition.started === true) &
     (gameState.gamePosition.gameFailed === true)
   ) {
     return (
-      <div id="imagesDiv" className="flex flex-col justify-center items-center">
-        <FailedScreen startWithDog={startWithDog}></FailedScreen>
-      </div>
+      <MessageScreen
+        startWithDog={startWithDog}
+        message={failedScreenMessage}
+      ></MessageScreen>
+    );
+  } else if (
+    (gameState.gamePosition.started === true) &
+    (gameState.gamePosition.gameFailed === false)
+  ) {
+    return (
+      <Images
+        gameState={gameState}
+        handleClick={handleClick}
+        handleImageCount={handleImageCount}
+      ></Images>
     );
   }
 }
