@@ -47,14 +47,14 @@ function Images({ gameState, handleClick, handleImageCount, checkRounds, setIds 
           });
         }
 
-        setIds(newGameScores)
+        setIds(newGameScores, gameState.gamePosition.searchTerm)
       } catch (error) {
         console.error("Error fetching data from Giphy:", error);
       }
     };
 
     fetchGif();
-  }, [gameState.gamePosition.searchTerm]);
+  }, [gameState.gamePosition]);
 
   // randomise images data order on score change
 

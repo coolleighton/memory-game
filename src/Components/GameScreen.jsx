@@ -30,32 +30,11 @@ function GameScreen({
     messageFunction: startWithDog,
   };
 
-  if (
-    (gameState.gamePosition.started === false) &
-    (gameState.gamePosition.gameFailed === false)
-  ) {
-    return (
-      <MessageScreen
-        startWithDog={startWithDog}
-        message={startScreenMessage}
-      ></MessageScreen>
-    );
-  }
   if (gameState.gamePosition.imagesAbove5 === false) {
     return (
       <MessageScreen
         startWithDog={startWithDog}
         message={notEnoughGifsMessage}
-      ></MessageScreen>
-    );
-  } else if (
-    (gameState.gamePosition.started === true) &
-    (gameState.gamePosition.gameFailed === true)
-  ) {
-    return (
-      <MessageScreen
-        startWithDog={startWithDog}
-        message={failedScreenMessage}
       ></MessageScreen>
     );
   } else if (
@@ -70,6 +49,26 @@ function GameScreen({
         handleImageCount={handleImageCount}
         checkRounds={checkRounds}
       ></Images>
+    );
+  } else if (
+    (gameState.gamePosition.started === false) &
+    (gameState.gamePosition.gameFailed === false)
+  ) {
+    return (
+      <MessageScreen
+        startWithDog={startWithDog}
+        message={startScreenMessage}
+      ></MessageScreen>
+    );
+  } else if (
+    (gameState.gamePosition.started === true) &
+    (gameState.gamePosition.gameFailed === true)
+  ) {
+    return (
+      <MessageScreen
+        startWithDog={startWithDog}
+        message={failedScreenMessage}
+      ></MessageScreen>
     );
   }
 }

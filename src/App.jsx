@@ -5,6 +5,11 @@ import GameScreen from "./Components/GameScreen.jsx";
 import "./App.css";
 
 function App() {
+  // create arrays for new game stats
+  function repeat(item, times) {
+    return new Array(times).fill(item);
+  }
+
   // Get game state from local storage and check for high score
 
   let localStorageData = JSON.parse(window.localStorage.getItem("gameState"));
@@ -24,15 +29,12 @@ function App() {
       started: false,
       gameFailed: false,
       imagesAbove5: true,
+      firstRoundComplete: false,
+      secondRoundComplete: false,
+      finalRoundComplete: false,
     },
 
-    gameStats: [
-      { clicked: false, id: 0 },
-      { clicked: false, id: 1 },
-      { clicked: false, id: 2 },
-      { clicked: false, id: 3 },
-      { clicked: false, id: 4 },
-    ],
+    gameStats: repeat({ clicked: false, id: 0 }, 5),
 
     gameScores: {
       currentScore: 0,
@@ -51,15 +53,12 @@ function App() {
       started: true,
       gameFailed: false,
       imagesAbove5: true,
+      firstRoundComplete: false,
+      secondRoundComplete: false,
+      finalRoundComplete: false,
     };
 
-    const newGameStats = [
-      { clicked: false, id: 0 },
-      { clicked: false, id: 1 },
-      { clicked: false, id: 2 },
-      { clicked: false, id: 3 },
-      { clicked: false, id: 4 },
-    ];
+    const newGameStats = repeat({ clicked: false, id: 0 }, 5);
 
     const newGameScores = {
       currentScore: 0,
@@ -90,15 +89,12 @@ function App() {
       started: true,
       gameFailed: false,
       imagesAbove5: true,
+      firstRoundComplete: false,
+      secondRoundComplete: false,
+      finalRoundComplete: false,
     };
 
-    const newGameStats = [
-      { clicked: false, id: 0 },
-      { clicked: false, id: 1 },
-      { clicked: false, id: 2 },
-      { clicked: false, id: 3 },
-      { clicked: false, id: 4 },
-    ];
+    const newGameStats = repeat({ clicked: false, id: 0 }, 5);
 
     const newGameScores = {
       currentScore: 0,
@@ -115,7 +111,8 @@ function App() {
     localStorage.setItem("gameState", JSON.stringify(newgameState));
 
     document.querySelector("#currentScore").textContent = 0;
-    document.querySelector("#highScore").textContent = gameState.gameScores.highScore;
+    document.querySelector("#highScore").textContent =
+      gameState.gameScores.highScore;
   };
 
   // set image id's
@@ -129,30 +126,26 @@ function App() {
 
     setGameState(newgameState);
     localStorage.setItem("gameState", JSON.stringify(newgameState));
-  }
+  };
 
   // handle image clicks
 
   const handleClick = (index) => {
 
-    console.log(index)
-    let startNewGame = false;
+    let didTheGameFail = false;
 
     // creates new game stats
 
     const newGameStats = gameState.gameStats.map((cardClicked) => {
-      console.log(cardClicked.id)
       if (cardClicked.id === index) {
 
-        if (!cardClicked.clicked) {
-          
+        if (cardClicked.clicked === false) {
           return {
             ...cardClicked,
             clicked: true,
           };
-        } else {
-          
-          startNewGame = true;
+        } else if (cardClicked.clicked === true) {
+          didTheGameFail = true;
           return {
             ...cardClicked,
             clicked: true,
@@ -166,17 +159,24 @@ function App() {
     // creates new games position
 
     const newGamePosition = () => {
-      if (startNewGame === false) {
+      if (didTheGameFail === false) {
+        
         return gameState.gamePosition;
+        
       } else {
+        
+        console.log(didTheGameFail)
+        
         return {
           ...gameState.gamePosition,
           gameFailed: true,
+          
         };
       }
+    
     };
 
-    // adds up how many objects where clicked = ture
+    // adds up how many objects where clicked = true
 
     function sumClicked(array) {
       return array.reduce((sum, obj) => sum + (obj.clicked ? 1 : 0), 0);
@@ -211,38 +211,41 @@ function App() {
       gameScores: newGameScores,
     };
 
+    console.log(newGamePosition())
+
     setGameState(newgameState);
     localStorage.setItem("gameState", JSON.stringify(newgameState));
   };
 
-  // handle if images array is below 5 
+  // handle if images array is below 5
 
   const handleImageCount = (imagesArray) => {
-
-    
     if (imagesArray.length < 5) {
       const newGamePosition = {
         ...gameState.gamePosition,
         imagesAbove5: false,
-      }
+        
+      };
 
       const newgameState = {
         gamePosition: newGamePosition,
         gameStats: gameState.gameStats,
         gameScores: gameState.gameScores,
       };
-  
+
+      
+
       setGameState(newgameState);
       localStorage.setItem("gameState", JSON.stringify(newgameState));
     }
-  }
+  };
 
-  // reset high scores to 0 
+  // reset high scores to 0
 
   function resetHighScore() {
     const newGameScores = {
       ...gameState.gameScores,
-      highScore: 0
+      highScore: 0,
     };
 
     const newgameState = {
@@ -251,29 +254,108 @@ function App() {
       gameScores: newGameScores,
     };
 
-    setGameState(newgameState)
+    setGameState(newgameState);
     localStorage.setItem("gameState", JSON.stringify(newgameState));
   }
 
-  // check if rounds completed 
+  // check if rounds completed
 
   function checkForRound(scores) {
-    if(scores.currentScore === 5) {
+    if (
+      scores.currentScore === 5 &&
+      gameState.gamePosition.firstRoundComplete === false
+    ) {
       const newGamePosition = {
-        ...gameState.gamePosition,
+        searchTerm: gameState.gamePosition.searchTerm,
         searchAmount: 10,
-        ...gameState.gamePosition
+        started: true,
+        gameFailed: false,
+        imagesAbove5: true,
+        firstRoundComplete: true,
+        secondRoundComplete: false,
+        finalRoundComplete: false,
+      };
+
+      const newGameStats = repeat({ clicked: false, id: 0 }, 10);
+
+      const newGameScores = {
+        currentScore: 0,
+        ...gameState.gameScores,
       };
 
       const newgameState = {
         gamePosition: newGamePosition,
-        gameStats: gameState.gameStats,
-        gameScores: gameState.gameScores,
+        gameStats: newGameStats,
+        gameScores: newGameScores,
+      };
+      console.log("you won");
+      console.log(newgameState);
+
+      setGameState(newgameState);
+      localStorage.setItem("gameState", JSON.stringify(newgameState));
+    } else if (
+      scores.currentScore === 10 &&
+      gameState.gamePosition.secondRoundComplete === false
+    ) {
+      const newGamePosition = {
+        searchTerm: gameState.gamePosition.searchTerm,
+        searchAmount: 20,
+        started: true,
+        gameFailed: false,
+        imagesAbove5: true,
+        firstRoundComplete: true,
+        secondRoundComplete: true,
+        finalRoundComplete: false,
       };
 
-      console.log("round won")
-  
-      setGameState(newgameState)
+      const newGameStats = repeat({ clicked: false, id: 0 }, 20);
+
+      const newGameScores = {
+        currentScore: 0,
+        ...gameState.gameScores,
+      };
+
+      const newgameState = {
+        gamePosition: newGamePosition,
+        gameStats: newGameStats,
+        gameScores: newGameScores,
+      };
+      console.log("you won");
+      console.log(newgameState);
+
+      setGameState(newgameState);
+      localStorage.setItem("gameState", JSON.stringify(newgameState));
+    } else if (
+      scores.currentScore === 10 &&
+      gameState.gamePosition.secondRoundComplete === false
+    ) {
+      const newGamePosition = {
+        searchTerm: gameState.gamePosition.searchTerm,
+        searchAmount: 20,
+        started: true,
+        gameFailed: false,
+        imagesAbove5: true,
+        firstRoundComplete: true,
+        secondRoundComplete: true,
+        finalRoundComplete: true,
+      };
+
+      const newGameStats = repeat({ clicked: false, id: 0 }, 20);
+
+      const newGameScores = {
+        currentScore: 0,
+        ...gameState.gameScores,
+      };
+
+      const newgameState = {
+        gamePosition: newGamePosition,
+        gameStats: newGameStats,
+        gameScores: newGameScores,
+      };
+      console.log("you won");
+      console.log(newgameState);
+
+      setGameState(newgameState);
       localStorage.setItem("gameState", JSON.stringify(newgameState));
     }
   }
