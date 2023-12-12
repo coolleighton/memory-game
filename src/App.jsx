@@ -5,6 +5,7 @@ import GameScreen from "./Components/GameScreen.jsx";
 import "./App.css";
 
 function App() {
+
   // create arrays for new game stats
   function repeat(item, times) {
     return new Array(times).fill(item);
