@@ -6,6 +6,8 @@ function GameScreen({
   handleClick,
   startWithDog,
   handleImageCount,
+  checkRounds,
+  setIds,
 }) {
   const startScreenMessage = {
     messageText:
@@ -62,9 +64,11 @@ function GameScreen({
   ) {
     return (
       <Images
+        setIds={setIds}
         gameState={gameState}
         handleClick={handleClick}
         handleImageCount={handleImageCount}
+        checkRounds={checkRounds}
       ></Images>
     );
   }

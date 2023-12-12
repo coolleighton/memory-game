@@ -115,28 +115,43 @@ function App() {
     localStorage.setItem("gameState", JSON.stringify(newgameState));
 
     document.querySelector("#currentScore").textContent = 0;
-    document.querySelector("#highScore").textContent =
-      gameState.gameScores.highScore;
+    document.querySelector("#highScore").textContent = gameState.gameScores.highScore;
   };
+
+  // set image id's
+
+  const setNewGameStats = (data) => {
+    const newgameState = {
+      gamePosition: gameState.gamePosition,
+      gameStats: data,
+      gameScores: gameState.gameScores,
+    };
+
+    setGameState(newgameState);
+    localStorage.setItem("gameState", JSON.stringify(newgameState));
+  }
 
   // handle image clicks
 
   const handleClick = (index) => {
-    let i = +index;
+
+    console.log(index)
     let startNewGame = false;
 
     // creates new game stats
 
     const newGameStats = gameState.gameStats.map((cardClicked) => {
-      if (cardClicked.id === i) {
+      console.log(cardClicked.id)
+      if (cardClicked.id === index) {
+
         if (!cardClicked.clicked) {
-          console.log("+ 1 point and make this card clicked ");
+          
           return {
             ...cardClicked,
             clicked: true,
           };
         } else {
-          console.log("run new game function with a start new game button");
+          
           startNewGame = true;
           return {
             ...cardClicked,
@@ -204,7 +219,7 @@ function App() {
 
   const handleImageCount = (imagesArray) => {
 
-    console.log(imagesArray.length)
+    
     if (imagesArray.length < 5) {
       const newGamePosition = {
         ...gameState.gamePosition,
@@ -222,6 +237,47 @@ function App() {
     }
   }
 
+  // reset high scores to 0 
+
+  function resetHighScore() {
+    const newGameScores = {
+      ...gameState.gameScores,
+      highScore: 0
+    };
+
+    const newgameState = {
+      gamePosition: gameState.gamePosition,
+      gameStats: gameState.gameStats,
+      gameScores: newGameScores,
+    };
+
+    setGameState(newgameState)
+    localStorage.setItem("gameState", JSON.stringify(newgameState));
+  }
+
+  // check if rounds completed 
+
+  function checkForRound(scores) {
+    if(scores.currentScore === 5) {
+      const newGamePosition = {
+        ...gameState.gamePosition,
+        searchAmount: 10,
+        ...gameState.gamePosition
+      };
+
+      const newgameState = {
+        gamePosition: newGamePosition,
+        gameStats: gameState.gameStats,
+        gameScores: gameState.gameScores,
+      };
+
+      console.log("round won")
+  
+      setGameState(newgameState)
+      localStorage.setItem("gameState", JSON.stringify(newgameState));
+    }
+  }
+
   return (
     <>
       <div className="md:container md:mx-auto flex flex-col">
@@ -232,12 +288,14 @@ function App() {
           <span className="text-7xl text-purple-500">GAME</span>
         </h1>
         <SearchBar searchFunction={searchFunction}></SearchBar>
-        <Score gameState={gameState}></Score>
+        <Score gameState={gameState} resetScores={resetHighScore}></Score>
         <div
           id="imagesDiv"
-          className="flex flex-col justify-center items-center"
+          className="flex flex-col justify-center items-center  container"
         >
           <GameScreen
+            setIds={setNewGameStats}
+            checkRounds={checkForRound}
             gameState={gameState}
             handleClick={handleClick}
             startWithDog={startWithDog}
