@@ -79,7 +79,7 @@ function Images({ gameState, handleClick, handleImageCount, checkRounds, setIds 
   // render images on screen
 
   return (
-    <div className="grid gap-4 grid-cols-2 my-5">
+    <div className="grid gap-4 grid-cols-2 my-5 min-[500px]:grid-cols-3 md:grid-cols-5 md:gap-6">
       {imagesData.map((item) => {
         let title = removeTextAfterGif(item.title);
 
@@ -92,12 +92,12 @@ function Images({ gameState, handleClick, handleImageCount, checkRounds, setIds 
           <div
             id={item.id}
             key={item.id}
-            className=" w-18 p-2 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl hover:cursor-pointer"
+            className="flex flex-col justify-between h-18 w-18 md:p-5 min-[360px]:p-3 p-2 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl hover:cursor-pointer"
             onClick={(e) => handleClick(e.target.id)}
           >
             <img
               id={item.id}
-              className="h-18 w-18 rounded-xl "
+              className="resize h-18 w-18 rounded-xl "
               src={item.images.original.url}
             ></img>
             <p

@@ -289,6 +289,9 @@ function App() {
 
       setGameState(newgameState);
       localStorage.setItem("gameState", JSON.stringify(newgameState));
+      document.querySelector("#currentScore").textContent = 0;
+      document.querySelector("#highScore").textContent =
+        newGameScores.highScore;
     } else if (
       scores.currentScore === 10 &&
       gameState.gamePosition.secondRoundComplete === false
@@ -321,55 +324,26 @@ function App() {
 
       setGameState(newgameState);
       localStorage.setItem("gameState", JSON.stringify(newgameState));
-    } else if (
-      scores.currentScore === 10 &&
-      gameState.gamePosition.secondRoundComplete === false
-    ) {
-      const newGamePosition = {
-        searchTerm: gameState.gamePosition.searchTerm,
-        searchAmount: 20,
-        started: true,
-        gameFailed: false,
-        imagesAbove5: true,
-        firstRoundComplete: true,
-        secondRoundComplete: true,
-        finalRoundComplete: true,
-      };
-
-      const newGameStats = repeat({ clicked: false, id: 0 }, 20);
-
-      const newGameScores = {
-        currentScore: 0,
-        ...gameState.gameScores,
-      };
-
-      const newgameState = {
-        gamePosition: newGamePosition,
-        gameStats: newGameStats,
-        gameScores: newGameScores,
-      };
-      console.log("you won");
-      console.log(newgameState);
-
-      setGameState(newgameState);
-      localStorage.setItem("gameState", JSON.stringify(newgameState));
+      document.querySelector("#currentScore").textContent = 0;
+      document.querySelector("#highScore").textContent =
+        newGameScores.highScore;
     }
   }
 
   return (
     <>
       <div className="container mx-auto flex flex-col">
-        <h1 className="container mb-5 text-center text-2xl text-blue-400 font-semibold">
-          <span className="text-4xl text-purple-500">YOUR</span>
+        <h1 className="container mb-5 text-center text-2xl text-blue-400 font-semibold min-[360px]:text-3xl min-[500px]:text-5xl">
+          <span className="text-4xl text-purple-500 min-[360px]:text-5xl min-[500px]:text-7xl">YOUR</span>
           FAVOURITE <br></br>
           MEMORY
-          <span className="text-4xl text-purple-500">GAME</span>
+          <span className="text-4xl text-purple-500 min-[360px]:text-5xl  min-[500px]:text-7xl">GAME</span>
         </h1>
         <SearchBar searchFunction={searchFunction}></SearchBar>
         <Score gameState={gameState} resetScores={resetHighScore}></Score>
         <div
           id="imagesDiv"
-          className="flex flex-col justify-center items-center mx-5"
+          className="flex flex-col justify-center items-center mx-5 "
         >
           <GameScreen
             setIds={setNewGameStats}
