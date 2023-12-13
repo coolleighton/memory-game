@@ -79,7 +79,7 @@ function Images({ gameState, handleClick, handleImageCount, checkRounds, setIds 
   // render images on screen
 
   return (
-    <div className="flex justify-center">
+    <div className="grid gap-4 grid-cols-2 my-5">
       {imagesData.map((item) => {
         let title = removeTextAfterGif(item.title);
 
@@ -92,17 +92,17 @@ function Images({ gameState, handleClick, handleImageCount, checkRounds, setIds 
           <div
             id={item.id}
             key={item.id}
-            className="w-48 p-5 mx-5 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl hover:scale-110 hover:cursor-pointer duration-200"
+            className=" w-18 p-2 bg-gradient-to-b from-blue-400 to-blue-600 rounded-2xl hover:scale-110 hover:cursor-pointer duration-200"
             onClick={(e) => handleClick(e.target.id)}
           >
             <img
               id={item.id}
-              className="h-48 w-48 rounded-2xl "
+              className="h-18 w-18 rounded-xl "
               src={item.images.original.url}
             ></img>
             <p
               id={item.id}
-              className="text-sm shadow-lg text-white font-semibold bg-blue-900 text-center align-middle p-2 mt-5 rounded-xl"
+              className="text-xs shadow-lg text-white font-semibold bg-blue-900 text-center align-middle p-1 mt-3 rounded-xl"
             >
               {title}
             </p>

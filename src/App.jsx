@@ -2,11 +2,16 @@ import { useState } from "react";
 import Score from "./Components/Score.jsx";
 import SearchBar from "./Components/SearchBar.jsx";
 import GameScreen from "./Components/GameScreen.jsx";
+import Background from "./assets/low-poly-grid-haikei.svg";
 import "./App.css";
 
 function App() {
+  // set background
+
+  document.querySelector("body").style.backgroundImage = `url(${Background})`;
 
   // create arrays for new game stats
+
   function repeat(item, times) {
     return new Array(times).fill(item);
   }
@@ -132,14 +137,12 @@ function App() {
   // handle image clicks
 
   const handleClick = (index) => {
-
     let didTheGameFail = false;
 
     // creates new game stats
 
     const newGameStats = gameState.gameStats.map((cardClicked) => {
       if (cardClicked.id === index) {
-
         if (cardClicked.clicked === false) {
           return {
             ...cardClicked,
@@ -161,20 +164,15 @@ function App() {
 
     const newGamePosition = () => {
       if (didTheGameFail === false) {
-        
         return gameState.gamePosition;
-        
       } else {
-        
-        console.log(didTheGameFail)
-        
+        console.log(didTheGameFail);
+
         return {
           ...gameState.gamePosition,
           gameFailed: true,
-          
         };
       }
-    
     };
 
     // adds up how many objects where clicked = true
@@ -212,7 +210,7 @@ function App() {
       gameScores: newGameScores,
     };
 
-    console.log(newGamePosition())
+    console.log(newGamePosition());
 
     setGameState(newgameState);
     localStorage.setItem("gameState", JSON.stringify(newgameState));
@@ -225,7 +223,6 @@ function App() {
       const newGamePosition = {
         ...gameState.gamePosition,
         imagesAbove5: false,
-        
       };
 
       const newgameState = {
@@ -233,8 +230,6 @@ function App() {
         gameStats: gameState.gameStats,
         gameScores: gameState.gameScores,
       };
-
-      
 
       setGameState(newgameState);
       localStorage.setItem("gameState", JSON.stringify(newgameState));
@@ -363,18 +358,18 @@ function App() {
 
   return (
     <>
-      <div className="md:container md:mx-auto flex flex-col">
-        <h1 className="mb-5 text-center text-5xl text-blue-400 font-semibold">
-          <span className="text-7xl text-purple-500">YOUR</span>
+      <div className="container mx-auto flex flex-col">
+        <h1 className="container mb-5 text-center text-2xl text-blue-400 font-semibold">
+          <span className="text-4xl text-purple-500">YOUR</span>
           FAVOURITE <br></br>
           MEMORY
-          <span className="text-7xl text-purple-500">GAME</span>
+          <span className="text-4xl text-purple-500">GAME</span>
         </h1>
         <SearchBar searchFunction={searchFunction}></SearchBar>
         <Score gameState={gameState} resetScores={resetHighScore}></Score>
         <div
           id="imagesDiv"
-          className="flex flex-col justify-center items-center  container"
+          className="flex flex-col justify-center items-center mx-5"
         >
           <GameScreen
             setIds={setNewGameStats}
